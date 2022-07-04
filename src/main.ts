@@ -4,6 +4,7 @@
 // - Dynamically render the posts using the card HTML portion that you'll find commented in the index.html file. ✅
 // - Render the comments for the posts and the likes, too. (note the heart button is useless. For now 😉) ✅
 // - Try to use the same CSS classes to achieve the desired look. ✅
+//- Have the like button adding 1 like to the respective counter each time you click it ✅
 
 // Tips
 // - Make some requests to your server and inspect the response, so you can check the data structure before start coding ✅
@@ -41,6 +42,15 @@ function getImagesFromServer() {
       render();
     });
 }
+function updateImage (image) {
+  return fetch(`http://localhost:5000/images/${image.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(image)
+  }).then(resp => resp.json())
+}
 
 // rendering the images
 function renderImages() {
@@ -70,6 +80,12 @@ function renderImages() {
     let buttonEl = document.createElement("button");
     buttonEl.className = "like-button";
     buttonEl.textContent = "♥";
+
+    buttonEl.addEventListener("click", function(){
+      image.likes++;
+      updateImage(image)
+      render();
+    } );
 
     let listEl = document.createElement("ul");
     listEl.className = "comments";
