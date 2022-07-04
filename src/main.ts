@@ -1,28 +1,16 @@
-// solution goes here
-// This is what a post looks like
-// {
-//   "id": 1,
-//   "title": "Coder dog",
-//   "likes": 7,
-//   "image": "./assets/coder-dog.png",
-//   "comments": [
-//     {
-//       "id": 1,
-//       "content": "What a cute dog!",
-//       "imageId": 1
-//     },
-//     {
-//       "imageId": 1,
-//       "content": "Funny dog!!",
-//       "id": 4
-//     },
-//     {
-//       "imageId": 1,
-//       "content": "Hes a good boy!!",
-//       "id": 5
-//     }
-//   ]
-// }
+// Instructions
+// - Use this template as a starting point. Make sure you download it into your laptop https://codesandbox.io/s/day-14-hoxtagram-i-template-sibgn(old link in JS. use this one instead => ) https://codesandbox.io/s/hoxtagram-i-crud-template-tbc7mb ✅
+// - Set up your json-server using the files in the db folder; You must start the server on your local machine, using this exact command from the terminal on the root of your project folder:  json-server --watch db/db.json --routes db/routes.json  ✅
+// - Dynamically render the posts using the card HTML portion that you'll find commented in the index.html file. ✅
+// - Render the comments for the posts and the likes, too. (note the heart button is useless. For now 😉) ✅
+// - Try to use the same CSS classes to achieve the desired look. ✅
+
+// Tips
+// - Make some requests to your server and inspect the response, so you can check the data structure before start coding ✅
+// - Feel free to use hardcoded values to take care of the visuals, before connecting your front end to the server ✅
+// - Help yourselves by building helper functions, a la getImages() ✅
+
+//Creating the types
 type CommentData = {
   imageId: number;
   content: string;
@@ -39,9 +27,12 @@ type State = {
   images: Image[];
 };
 
+//Creating the state
 let state: State = {
   images: [],
 };
+
+// getting the data from the server
 function getImagesFromServer() {
   fetch("http://localhost:5000/images")
     .then((resp) => resp.json())
@@ -51,6 +42,7 @@ function getImagesFromServer() {
     });
 }
 
+// rendering the images
 function renderImages() {
   let sectionEl = document.querySelector<HTMLElement>(".image-container");
   if (sectionEl === null) return;
@@ -58,7 +50,7 @@ function renderImages() {
 
   let articleEl = document.createElement("article");
   articleEl.className = "image-card";
-
+  // looping through the images and creating the cards
   for (let image of state.images) {
     let titleh2El = document.createElement("h2");
     titleh2El.className = "title";
@@ -81,6 +73,8 @@ function renderImages() {
 
     let listEl = document.createElement("ul");
     listEl.className = "comments";
+
+    // looping through the comments and creating the comments
     for (let comment of image.comments) {
       let liEl = document.createElement("li");
       liEl.textContent = comment.content;
@@ -92,23 +86,10 @@ function renderImages() {
     divEl.append(spanEl, buttonEl);
   }
   sectionEl.append(articleEl);
-
-  //     <article class="image-card">
-  //     <h2 class="title">Title of image goes here</h2>
-  //     <img src="./assets/image-placeholder.jpg" class="image" />
-  //     <div class="likes-section">
-  //       <span class="likes">0 likes</span>
-  //       <button class="like-button">♥</button>
-  //     </div>
-  //     <ul class="comments">
-  //       <li>Get rid of these comments</li>
-  //       <li>And replace them with the real ones</li>
-  //       <li>From the server</li>
-  //     </ul>
-  //   </article>
 }
+
+// rendering everything
 function render() {
-  // console.log('current state:', JSON.stringify(state, null, 2))
   renderImages();
 }
 render();
