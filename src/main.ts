@@ -56,18 +56,18 @@ function updateImage(image: Image) {
   }).then((resp) => resp.json());
 }
 
-function addAComment() {
-  return fetch("http://localhost:5000/comments", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      imageId: state.images[0].id,
-      content: "",
-    }),
-  }).then((resp) => resp.json());
-}
+// function addAComment() {
+//   return fetch("http://localhost:5000/comments", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({
+//       imageId: state.images[0].id,
+//       content: "",
+//     }),
+//   }).then((resp) => resp.json());
+// }
 
 // // rendering the images
 function renderImages() {
@@ -121,11 +121,11 @@ function renderImages() {
 
     let formEl = document.createElement("form");
     formEl.className = "comment-form";
-    formEl.addEventListener("submit", function (event) {
-      event.preventDefault();
-      addAComment();
-      render();
-    });
+    // formEl.addEventListener("submit", function (event) {
+    //   event.preventDefault();
+    //   addAComment();
+    //   render();
+    // });
     let inputEl = document.createElement("input");
     inputEl.className = "comment-input";
     inputEl.type = "text";
