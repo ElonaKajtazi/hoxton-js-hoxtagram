@@ -1,3 +1,4 @@
+// solution goes here
 // Instructions
 // - Use this template as a starting point. Make sure you download it into your laptop https://codesandbox.io/s/day-14-hoxtagram-i-template-sibgn(old link in JS. use this one instead => ) https://codesandbox.io/s/hoxtagram-i-crud-template-tbc7mb ✅
 // - Set up your json-server using the files in the db folder; You must start the server on your local machine, using this exact command from the terminal on the root of your project folder:  json-server --watch db/db.json --routes db/routes.json  ✅
@@ -5,6 +6,7 @@
 // - Render the comments for the posts and the likes, too. (note the heart button is useless. For now 😉) ✅
 // - Try to use the same CSS classes to achieve the desired look. ✅
 //- Have the like button adding 1 like to the respective counter each time you click it ✅
+//- Have the comments form to add another comment to the respective post
 
 // Tips
 // - Make some requests to your server and inspect the response, so you can check the data structure before start coding ✅
@@ -40,19 +42,34 @@ function getImagesFromServer() {
     .then((images) => {
       state.images = images;
       render();
+      console.log(images);
     });
 }
-function updateImage (image) {
+
+function updateImage(image: Image) {
   return fetch(`http://localhost:5000/images/${image.id}`, {
-    method: 'PATCH',
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(image)
-  }).then(resp => resp.json())
+    body: JSON.stringify(image),
+  }).then((resp) => resp.json());
 }
 
-// rendering the images
+function addAComment() {
+  return fetch("http://localhost:5000/comments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      imageId: state.images[0].id,
+      content: "",
+    }),
+  }).then((resp) => resp.json());
+}
+
+// // rendering the images
 function renderImages() {
   let sectionEl = document.querySelector<HTMLElement>(".image-container");
   if (sectionEl === null) return;
@@ -81,11 +98,11 @@ function renderImages() {
     buttonEl.className = "like-button";
     buttonEl.textContent = "♥";
 
-    buttonEl.addEventListener("click", function(){
+    buttonEl.addEventListener("click", function () {
       image.likes++;
-      updateImage(image)
+      updateImage(image);
       render();
-    } );
+    });
 
     let listEl = document.createElement("ul");
     listEl.className = "comments";
@@ -94,13 +111,46 @@ function renderImages() {
     for (let comment of image.comments) {
       let liEl = document.createElement("li");
       liEl.textContent = comment.content;
+    //   let deleteButtonEl = document.createElement("button");
+    //   deleteButtonEl.textContent = "X";
+    //   liEl.appendChild(deleteButtonEl);
       listEl.append(liEl);
     }
 
-    articleEl.append(titleh2El, imageEl, divEl, buttonEl, listEl);
-
     divEl.append(spanEl, buttonEl);
+
+    let formEl = document.createElement("form");
+    formEl.className = "comment-form";
+    formEl.addEventListener("submit", function (event) {
+      event.preventDefault();
+      addAComment();
+      render();
+    });
+    let inputEl = document.createElement("input");
+    inputEl.className = "comment-input";
+    inputEl.type = "text";
+    inputEl.name = "comment";
+    inputEl.placeholder = "Add a comment...";
+
+    let buttonEl1 = document.createElement("button");
+    buttonEl1.className = "comment-button";
+    buttonEl1.type = "submit";
+    buttonEl1.textContent = "Post";
+
+    formEl.append(inputEl, buttonEl1);
+
+    articleEl.append(titleh2El, imageEl, divEl, buttonEl, listEl, formEl);
   }
+  //   <form class="comment-form">
+  //   <input
+  //     class="comment-input"
+  //     type="text"
+  //     name="comment"
+  //     placeholder="Add a comment..."
+  //   />
+  //   <button class="comment-button" type="submit">Post</button>
+  // </form>
+
   sectionEl.append(articleEl);
 }
 
