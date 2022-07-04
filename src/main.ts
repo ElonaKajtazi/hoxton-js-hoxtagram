@@ -25,8 +25,8 @@
 // }
 type CommentData = {
   imageId: number;
-  content: string
-  id: number
+  content: string;
+  id: number;
 };
 type Image = {
   id: number;
@@ -52,36 +52,43 @@ function getImagesFromServer() {
 }
 
 function renderImages() {
-  let sectionEl = document.querySelector(".image-container");
+  let sectionEl = document.querySelector<HTMLElement>(".image-container");
   if (sectionEl === null) return;
   sectionEl.textContent = "";
+
   let articleEl = document.createElement("article");
   articleEl.className = "image-card";
+
   for (let image of state.images) {
     let titleh2El = document.createElement("h2");
     titleh2El.className = "title";
     titleh2El.textContent = image.title;
+
     let imageEl = document.createElement("img");
     imageEl.className = "image";
     imageEl.src = image.image;
+
     let divEl = document.createElement("div");
     divEl.className = "likes-section";
+
     let spanEl = document.createElement("span");
     spanEl.className = "likes";
     spanEl.textContent = image.likes + " likes";
+
     let buttonEl = document.createElement("button");
     buttonEl.className = "like-button";
     buttonEl.textContent = "♥";
+
     let listEl = document.createElement("ul");
     listEl.className = "comments";
-    let liEl = document.createElement("li");
-    liEl.textContent = image.comments[0].content;
-    let liEl2 = document.createElement("li");
-    liEl2.textContent = image.comments[1].content;
-    let liEl3 = document.createElement("li");
-    // liEl3.textContent = image.comments[2].content;
+    for (let comment of image.comments) {
+      let liEl = document.createElement("li");
+      liEl.textContent = comment.content;
+      listEl.append(liEl);
+    }
+
     articleEl.append(titleh2El, imageEl, divEl, buttonEl, listEl);
-    listEl.append(liEl, liEl2, liEl3);
+
     divEl.append(spanEl, buttonEl);
   }
   sectionEl.append(articleEl);
