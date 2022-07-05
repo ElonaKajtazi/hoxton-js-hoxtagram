@@ -3,7 +3,7 @@
     {
       "id": 1,
       "title": "Coder dog",
-      "likes": 10,
+      "likes": 15,
       "image": "./assets/coder-dog.png",
       "comments": [
         {
@@ -20,14 +20,31 @@
           "imageId": 1,
           "content": "Hes a good boy!!",
           "id": 5
+        },
+        {
+          "imageId": 1,
+          "content": "",
+          "id": 6
         }
       ]
     },
     {
       "id": 2,
       "title": "Coder cats",
-      "likes": 5,
-      "image": "./assets/coder-cat.jpeg"
+      "likes": 9,
+      "image": "./assets/coder-cat.jpeg",
+      "comments": [
+        {
+          "id": 2,
+          "content": "He has the paws for this!",
+          "imageId": 2
+        },
+        {
+          "id": 3,
+          "content": "Someone's in trouble!",
+          "imageId": 2
+        }
+      ]
     }
   ],
   "comments": [
@@ -60,6 +77,101 @@
       "imageId": 1,
       "content": "",
       "id": 6
+    },
+    {
+      "imageId": 1,
+      "content": "dwhjk",
+      "id": 7
+    },
+    {
+      "imageId": 1,
+      "content": "asdfgbhj",
+      "id": 8
+    },
+    {
+      "imageId": 1,
+      "content": "asdfgbhj",
+      "id": 9
+    },
+    {
+      "imageId": 1,
+      "content": "asdfgbhj",
+      "id": 10
+    },
+    {
+      "imageId": 1,
+      "content": "asdfgbhj",
+      "id": 11
+    },
+    {
+      "imageId": 1,
+      "content": "asdfgbhj",
+      "id": 12
+    },
+    {
+      "imageId": 2,
+      "content": "ttttt",
+      "id": 13
+    },
+    {
+      "imageId": 2,
+      "content": "eeeee",
+      "id": 14
+    },
+    {
+      "imageId": 1,
+      "content": "ssss",
+      "id": 15
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 16
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 17
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 18
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 19
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 20
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 21
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 22
+    },
+    {
+      "imageId": 2,
+      "content": "wwwwww",
+      "id": 23
+    },
+    {
+      "imageId": 1,
+      "content": " vvg",
+      "id": 24
+    },
+    {
+      "imageId": 1,
+      "content": "dddd",
+      "id": 25
     }
   ]
 }

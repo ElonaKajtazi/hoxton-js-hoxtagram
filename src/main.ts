@@ -20,11 +20,11 @@ type CommentData = {
   id: number;
 };
 type Image = {
-  id: number;
-  title: string;
-  likes: number;
-  image: string;
-  comments: CommentData[];
+  id: number
+  title: string
+  likes: number
+  image: string
+  comments: CommentData[]
 };
 type State = {
   images: Image[];
@@ -39,124 +39,140 @@ let state: State = {
 function getImagesFromServer() {
   fetch("http://localhost:5000/images")
     .then((resp) => resp.json())
-    .then((images) => {
-      state.images = images;
+    .then((getImagesFromServer) => {
+      state.images = getImagesFromServer.reverse();
       render();
-      console.log(images);
     });
 }
 
-function updateImage(image: Image) {
+function updateImage(image) {
+  let imageCopy = { ...image };
+  delete imageCopy.comments;
+
   return fetch(`http://localhost:5000/images/${image.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(image),
+    body: JSON.stringify(imageCopy),
   }).then((resp) => resp.json());
 }
 
-// function addAComment() {
-//   return fetch("http://localhost:5000/comments", {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       imageId: state.images[0].id,
-//       content: "",
-//     }),
-//   }).then((resp) => resp.json());
-// }
+function createComment(content: string, imageId: number) {
+  fetch("http://localhost:3333/comments", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      content,
+      imageId,
+    }),
+  })
+    .then((resp) => resp.json())
+    .then(() => {
+      getImagesFromServer();
+    });
+}
+function deleteImage(imageId: number) {
+  fetch(`http://localhost:3333/images/${imageId}`, {
+    method: "DELETE",
+  }).then(() => getImagesFromServer());
+}
+function renderComment(comment: CommentData, listEl: HTMLUListElement) {
+  let liEl = document.createElement("li");
+  liEl.textContent = comment.content;
+  listEl.append(liEl);
+}
 
-// // rendering the images
-function renderImages() {
-  let sectionEl = document.querySelector<HTMLElement>(".image-container");
-  if (sectionEl === null) return;
-  sectionEl.textContent = "";
+function renderCommentForm(imageId: number, articleEl: HTMLElement) {
+  let formEl = document.createElement("form");
+  formEl.className = "comment-form";
+  formEl.addEventListener("submit", function (event) {
+    event.preventDefault();
+    createComment(inputEl.value, imageId);
+  });
 
+  let inputEl = document.createElement("input");
+  inputEl.className = "comment-input";
+  inputEl.type = "text";
+  inputEl.name = "comment";
+  inputEl.placeholder = "Add a comment...";
+
+  let buttonEl1 = document.createElement("button");
+  buttonEl1.className = "comment-button";
+  buttonEl1.type = "submit";
+  buttonEl1.textContent = "Post";
+
+  formEl.append(inputEl, buttonEl1);
+  articleEl.append(formEl);
+}
+function renderImage(image: Image, sectionEl: HTMLElement) {
   let articleEl = document.createElement("article");
   articleEl.className = "image-card";
-  // looping through the images and creating the cards
-  for (let image of state.images) {
-    let titleh2El = document.createElement("h2");
-    titleh2El.className = "title";
-    titleh2El.textContent = image.title;
 
-    let imageEl = document.createElement("img");
-    imageEl.className = "image";
-    imageEl.src = image.image;
+  let topSection = document.createElement("div");
+  topSection.className = "image__top-section";
 
-    let divEl = document.createElement("div");
-    divEl.className = "likes-section";
+  let titleh2El = document.createElement("h2");
+  titleh2El.className = "title";
+  titleh2El.textContent = image.title;
 
-    let spanEl = document.createElement("span");
-    spanEl.className = "likes";
-    spanEl.textContent = image.likes + " likes";
+  let deletePostButton = document.createElement("button");
+  deletePostButton.className = "image__top-section";
+  deletePostButton.textContent = "❌";
+  deletePostButton.addEventListener("click", () => {
+    deleteImage(image.id);
+  });
+  topSection.append(titleh2El, deletePostButton);
 
-    let buttonEl = document.createElement("button");
-    buttonEl.className = "like-button";
-    buttonEl.textContent = "♥";
+  let imageEl = document.createElement("img");
+  imageEl.className = "image";
+  imageEl.src = image.image;
 
-    buttonEl.addEventListener("click", function () {
-      image.likes++;
-      updateImage(image);
-      render();
-    });
+  let divEl = document.createElement("div");
+  divEl.className = "likes-section";
 
-    let listEl = document.createElement("ul");
-    listEl.className = "comments";
+  let spanEl = document.createElement("span");
+  spanEl.className = "likes";
+  spanEl.textContent = `${image.likes}  likes`;
+  let buttonEl = document.createElement("button");
+  buttonEl.className = "like-button";
+  buttonEl.textContent = "♥";
 
-    // looping through the comments and creating the comments
-    for (let comment of image.comments) {
-      let liEl = document.createElement("li");
-      liEl.textContent = comment.content;
-    //   let deleteButtonEl = document.createElement("button");
-    //   deleteButtonEl.textContent = "X";
-    //   liEl.appendChild(deleteButtonEl);
-      listEl.append(liEl);
-    }
+  buttonEl.addEventListener("click", function () {
+    image.likes++;
+    updateImage(image);
+    render();
+  });
 
-    divEl.append(spanEl, buttonEl);
+  let listEl = document.createElement("ul");
+  listEl.className = "comments";
 
-    let formEl = document.createElement("form");
-    formEl.className = "comment-form";
-    // formEl.addEventListener("submit", function (event) {
-    //   event.preventDefault();
-    //   addAComment();
-    //   render();
-    // });
-    let inputEl = document.createElement("input");
-    inputEl.className = "comment-input";
-    inputEl.type = "text";
-    inputEl.name = "comment";
-    inputEl.placeholder = "Add a comment...";
-
-    let buttonEl1 = document.createElement("button");
-    buttonEl1.className = "comment-button";
-    buttonEl1.type = "submit";
-    buttonEl1.textContent = "Post";
-
-    formEl.append(inputEl, buttonEl1);
-
-    articleEl.append(titleh2El, imageEl, divEl, buttonEl, listEl, formEl);
+  // looping through the comments and creating the comments
+  for (let comment of image.comments.slice(-5)) {
+    renderComment(comment, listEl);
   }
-  //   <form class="comment-form">
-  //   <input
-  //     class="comment-input"
-  //     type="text"
-  //     name="comment"
-  //     placeholder="Add a comment..."
-  //   />
-  //   <button class="comment-button" type="submit">Post</button>
-  // </form>
+
+  divEl.append(spanEl, buttonEl);
+
+  articleEl.append(topSection, imageEl, divEl, listEl);
+
+  renderCommentForm(image.id, articleEl);
 
   sectionEl.append(articleEl);
 }
 
-// rendering everything
 function render() {
-  renderImages();
+  let sectionEl = document.querySelector<HTMLElement>(".image-container");
+  if (sectionEl === null) return;
+  sectionEl.textContent = "";
+
+  for (let image of state.images) {
+    renderImage(image, sectionEl);
+  }
 }
-render();
+
 getImagesFromServer();
+
+render();
