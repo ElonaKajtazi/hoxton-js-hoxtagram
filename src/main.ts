@@ -48,18 +48,31 @@ function getImagesFromServer() {
 function updateImage(image) {
   let imageCopy = { ...image };
   delete imageCopy.comments;
-
   return fetch(`http://localhost:5000/images/${image.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(imageCopy),
-  }).then((resp) => resp.json());
+  })
+}
+function createImage(title: string, image: string) {
+  fetch("http://localhost:5000/images", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      title,
+      likes: 0,
+      image
+
+    }),
+  }).then(() => getImagesFromServer());
 }
 
 function createComment(content: string, imageId: number) {
-  fetch("http://localhost:3333/comments", {
+  fetch("http://localhost:5000/comments", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -73,6 +86,11 @@ function createComment(content: string, imageId: number) {
     .then(() => {
       getImagesFromServer();
     });
+}
+function deleteComment(commentId: number) {
+  fetch(`http://localhost:5000/comments/${commentId}`, {
+    method: "DELETE",
+  }).then(() => getImagesFromServer());
 }
 function deleteImage(imageId: number) {
   fetch(`http://localhost:3333/images/${imageId}`, {
@@ -119,11 +137,12 @@ function renderImage(image: Image, sectionEl: HTMLElement) {
   titleh2El.textContent = image.title;
 
   let deletePostButton = document.createElement("button");
-  deletePostButton.className = "image__top-section";
+  deletePostButton.className = "image__delete-button";
   deletePostButton.textContent = "❌";
-  deletePostButton.addEventListener("click", () => {
+  deletePostButton.addEventListener("click", function() {
     deleteImage(image.id);
   });
+
   topSection.append(titleh2El, deletePostButton);
 
   let imageEl = document.createElement("img");
@@ -173,6 +192,17 @@ function render() {
   }
 }
 
+function listenToNewPostForm() {
+  let newPostFormEl = document.querySelector<HTMLFormElement>(".new-post-form");
+  newPostFormEl?.addEventListener("submit", function (event) {
+    event.preventDefault();
+   if (newPostFormEl===null) return;
+   // @ts-ignore
+   createImage(newPostFormEl.title.value, newPostFormEl.image.value);
+    newPostFormEl.reset();
+  });
+}
+listenToNewPostForm();
 getImagesFromServer();
 
 render();

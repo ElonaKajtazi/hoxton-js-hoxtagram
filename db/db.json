@@ -31,7 +31,7 @@
     {
       "id": 2,
       "title": "Coder cats",
-      "likes": 9,
+      "likes": 10,
       "image": "./assets/coder-cat.jpeg",
       "comments": [
         {
@@ -45,6 +45,12 @@
           "imageId": 2
         }
       ]
+    },
+    {
+      "title": "Wish I was here!!",
+      "likes": 2,
+      "image": "https://images.pexels.com/photos/1174732/pexels-photo-1174732.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "id": 3
     }
   ],
   "comments": [
@@ -172,6 +178,11 @@
       "imageId": 1,
       "content": "dddd",
       "id": 25
+    },
+    {
+      "content": "fdgrgtr",
+      "imageId": 2,
+      "id": 26
     }
   ]
 }
