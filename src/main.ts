@@ -6,7 +6,10 @@
 // - Render the comments for the posts and the likes, too. (note the heart button is useless. For now 😉) ✅
 // - Try to use the same CSS classes to achieve the desired look. ✅
 //- Have the like button adding 1 like to the respective counter each time you click it ✅
-//- Have the comments form to add another comment to the respective post
+//- Have the comments form to add another comment to the respective post ✅
+//- Add a delete button to each comment and post. Setup these buttons to be able to delete respectively comments and posts, and persist the changes. ✅
+// Challenge 1
+// Uncomment the form from index.html. Setup the form so that you can add posts to the page. They must persist after a refresh. Tip: Make sure you append the cards after the form. ✅
 
 // Tips
 // - Make some requests to your server and inspect the response, so you can check the data structure before start coding ✅
@@ -93,13 +96,27 @@ function deleteComment(commentId: number) {
   }).then(() => getImagesFromServer());
 }
 function deleteImage(imageId: number) {
-  fetch(`http://localhost:3333/images/${imageId}`, {
+  fetch(`http://localhost:5000/images/${imageId}`, {
     method: "DELETE",
   }).then(() => getImagesFromServer());
 }
 function renderComment(comment: CommentData, listEl: HTMLUListElement) {
   let liEl = document.createElement("li");
-  liEl.textContent = comment.content;
+  liEl.className = "comment";
+
+
+  let spanEl = document.createElement("span");
+  spanEl.textContent = comment.content;
+
+  let deleteButtonEl = document.createElement("button");
+  deleteButtonEl.className = "comment-button";
+  deleteButtonEl.textContent ='🗑️'
+
+  deleteButtonEl.addEventListener("click", function () {
+    deleteComment(comment.id);
+  }
+  );
+  liEl.append(spanEl, deleteButtonEl);
   listEl.append(liEl);
 }
 

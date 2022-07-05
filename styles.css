@@ -133,6 +133,8 @@ img {
 }
 
 .comment-button {
+ 
+  all: unset;
   border: none;
   font-size: 0.8rem;
   font-weight: 600;
